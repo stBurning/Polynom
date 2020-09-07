@@ -2,13 +2,10 @@ package com.company;
 
 import java.util.Arrays;
 
-
-public class Polynom {
+public class Polynom implements Comparable<Polynom>{
 
     public static final double ZERO = 1e-10;
-    /**
-     * Коэффициенты полинома
-     **/
+    /** Коэффициенты полинома **/
     protected double[] a;
     /**
      * Конструктор по умолчанию:
@@ -17,10 +14,7 @@ public class Polynom {
     public Polynom() {
         a = new double[]{0};
     }
-    /**
-     *
-     * @param a - коэффициенты полинома
-     */
+    /** @param a - коэффициенты полинома */
     public Polynom(double[] a) {
         this.a = a;
         valid();
@@ -48,11 +42,8 @@ public class Polynom {
      */
     public Polynom plus(Polynom other){
         Polynom minP, maxP;
-        if (this.a.length > other.a.length){
-            maxP = this; minP = other;
-        }else {
-            minP = this; maxP = other;
-        }
+        if (this.compareTo(other) > 0){ maxP = this; minP = other;
+        }else { minP = this; maxP = other; }
         double[] c = new double[maxP.a.length];
         for (int i = 0; i < maxP.a.length; i++) {
             if (i < minP.a.length)
@@ -94,12 +85,10 @@ public class Polynom {
      * @param other - другой полином
      */
     public Polynom mul(Polynom other){
-        Polynom minP, maxP; //TODO
-        if (this.a.length > other.a.length){
-            maxP = this; minP = other;
-        }else {
-            minP = this; maxP = other;
-        }
+        Polynom minP, maxP;
+        if (this.compareTo(other) > 0){ maxP = this; minP = other;
+        }else { minP = this; maxP = other; }
+
         double[] c = new double[minP.a.length];
         for (int i = 0; i < minP.a.length; i++) {
             c[i] = maxP.a[i] * minP.a[i];
@@ -108,14 +97,14 @@ public class Polynom {
     }
     @Override
     public String toString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (int i = getPower(); i >= 0; i--) {
             if (i == 0)
-                out += a[i];
+                out.append(a[i]);
             else
-                out += a[i] + "x^" + i + " +" + " ";
+                out.append(a[i]).append("x^").append(i).append(" +").append(" ");
         }
-        return out;
+        return out.toString();
     }
 
     @Override
@@ -129,5 +118,21 @@ public class Polynom {
     @Override
     public int hashCode() {
         return Arrays.hashCode(a);
+    }
+
+    @Override
+    public int compareTo(Polynom o) {
+
+        if (this.a.length > o.a.length){
+            return 1;
+        }else if(this.a.length < o.a.length){
+            return -1;
+        }else {
+            for (int i = 0; i < a.length; i++) {
+                //TODO double comparison
+                if (a[i] > o.a[i]) return 1;
+                if (a[i] < o.a[i]) return -1;
+            }
+        } return 0;
     }
 }
