@@ -99,14 +99,43 @@ public class Polynom implements Comparable<Polynom>{
     public String toString() {
         StringBuilder out = new StringBuilder();
         for (int i = getPower(); i >= 0; i--) {
-            if (i == 0)
-                out.append(a[i]);
-            else
-                out.append(a[i]).append("x^").append(i).append(" +").append(" ");
+            if (!isZero(a[i])){
+                if(i == getPower()) out.append((a[i] >= 0 ? "" : "-"));
+                else out.append((a[i] >= 0 ? "+ " : "- "));
+                if(Math.abs(a[i]) != 1 || i == 0) out.append(Math.abs((long) a[i]));
+                if(i != 0) out.append("x");
+                if(i > 1) out.append("^[").append(i).append("]");
+                out.append(" ");
+            }
+//            if (!isZero(a[i])) {
+//                if (i == 0) {
+//                    if (i != getPower())
+//                        out.append((a[i] >= 0 ? "+ " : "- "));
+//                    else
+//                        out.append((a[i] >= 0 ? "" : "-"));
+//                    out.append(Math.abs(a[i]));
+//                } else if (i == getPower()) {
+//                    out.append((a[i] >= 0 ? "" : "-"));
+//                    if (Math.abs(a[i]) != 1)
+//                        out.append(Math.abs(a[i]));
+//                    out.append("x^(").append(i).append(") ");
+//                } else {
+//                    out.append((a[i] >= 0 ? "+ " : "- "));
+//                    if (Math.abs(a[i]) != 1)
+//                        out.append(Math.abs(a[i]));
+//                    out.append("x^(").append(i).append(") ");
+//                }
+//            }else out.append(a[getPower()]);
         }
         return out.toString();
     }
-
+    public double invoke(double x){
+        double result = 0;
+        for (int i = 1; i < a.length; i++) {
+            result += a[i] * Math.pow(x, i);
+        }
+        return result;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,5 +163,9 @@ public class Polynom implements Comparable<Polynom>{
                 if (a[i] < o.a[i]) return -1;
             }
         } return 0;
+    }
+
+    private boolean isZero(double x){
+        return Math.abs(x) <= 2 * Double.MIN_VALUE;
     }
 }
